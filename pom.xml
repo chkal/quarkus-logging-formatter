@@ -7,6 +7,8 @@
   <version>0.0.1-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>Quarkus Logging Formatter - Parent</name>
+  <description>Quarkus Logging Formatter - Parent</description>
+  <url>https://github.com/chkal/quarkus-logging-formatter</url>
 
   <modules>
     <module>deployment</module>
@@ -23,6 +25,27 @@
     <surefire-plugin.version>3.5.4</surefire-plugin.version>
   </properties>
 
+  <scm>
+    <connection>scm:git:https://github.com/chkal/quarkus-logging-formatter.git</connection>
+    <developerConnection>scm:git:git@github.com:chkal/quarkus-logging-formatter.git</developerConnection>
+    <url>https://github.com/chkal/quarkus-logging-formatter</url>
+  </scm>
+
+  <licenses>
+    <license>
+      <name>The Apache License, Version 2.0</name>
+      <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+    </license>
+  </licenses>
+
+  <developers>
+    <developer>
+      <id>chkal</id>
+      <name>Christian Kaltepoth</name>
+      <email>christian@kaltepoth.de</email>
+    </developer>
+  </developers>
+
   <dependencyManagement>
     <dependencies>
       <dependency>
@@ -36,6 +59,18 @@
   </dependencyManagement>
 
   <build>
+    <plugins>
+      <plugin>
+        <groupId>org.sonatype.central</groupId>
+        <artifactId>central-publishing-maven-plugin</artifactId>
+        <version>0.9.0</version>
+        <extensions>true</extensions>
+        <configuration>
+          <publishingServerId>central</publishingServerId>
+          <autoPublish>true</autoPublish>
+        </configuration>
+      </plugin>
+    </plugins>
     <pluginManagement>
       <plugins>
         <plugin>
@@ -75,4 +110,63 @@
       </plugins>
     </pluginManagement>
   </build>
+
+  <profiles>
+    <profile>
+      <id>release</id>
+      <activation>
+        <property>
+          <name>release</name>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-source-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>attach-sources</id>
+                <goals>
+                  <goal>jar-no-fork</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>attach-javadocs</id>
+                <goals>
+                  <goal>jar</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-gpg-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>sign-artifacts</id>
+                <phase>verify</phase>
+                <goals>
+                  <goal>sign</goal>
+                </goals>
+              </execution>
+            </executions>
+            <configuration>
+              <gpgArguments>
+                <arg>--pinentry-mode</arg>
+                <arg>loopback</arg>
+              </gpgArguments>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+
 </project>
